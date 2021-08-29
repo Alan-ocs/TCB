@@ -1,0 +1,5 @@
+[user]
+    email = alan.ocs@gmail.com
+
+[include]
+    path = ~/.gitconfig
