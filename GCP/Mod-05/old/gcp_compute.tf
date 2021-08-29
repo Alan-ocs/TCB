@@ -52,6 +52,8 @@ resource "google_compute_instance" "eua-db01" {
   #   sudo systemctl restart mysql.service
   #   EOH
   # }
+
 }
+
 
 
