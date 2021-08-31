@@ -22,3 +22,9 @@ variable "gcp_region" {
 variable "gcp_zone" {
   default = "us-west1-b"
 }
+
+variable "key_priv" {}
+variable "username" {}
+variable "project" {}
+variable "credentials_file" {}
+
