@@ -1,0 +1,41 @@
+---
+- name: MySQL Standalone Installation
+  gather_facts: no
+  hosts: all
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+
+    - name: "Update"
+      command: "apt update"
+    
+    - name: "Create Download Folder"
+      file:
+        path: /var/Download
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+        state: directory
+
+    - name: "Download MySQL"
+      get_url:
+        url: https://dev.mysql.com/get/mysql-apt-config_0.8.15-1_all.deb
+        dest: /var/Download/mysql-apt-config_0.8.15-1_all.deb
+      
+
+    - name: "Install MySQL Deb File"
+      command: "dpkg -i /var/Download/mysql-apt-config_0.8.15-1_all.deb"
+
+    - name: "Update"
+      command: "apt update"
+
+    - name: "Install MySQL"
+      command: "apt install mysql-server -y"
+
+    - name: "Set MySQL Password"
+      command: "sudo mysqladmin -u root password welcome1"
+    
+    - name: "Restart SQL Service"
+      command: "sudo systemctl restart mysql.service"
+
