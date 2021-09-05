@@ -1,41 +1,33 @@
 ---
 - name: MySQL Standalone Installation
-  gather_facts: false
+  gather_facts: no
   hosts: all
   become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    mysql_root_password: "welcome1"
   tasks:
-    - name: Update and upgrade apt packages
+
+    - name: install mariadb
       apt:
-        upgrade: yes
+        name:
+          - mariadb-server
+          - python3-pymysql
+        state: latest
 
-    - name: "Installing apt dependencies"
-      apt:
-        name: "{{item}}"
-      loop:
-        - python-pip
-        - python-dev 
-        - libmysqlclient-dev
+    - name: start mariadb
+      service:
+        name: mariadb
+        enabled: true
+        state: started
 
-    - name: "Installing pip dependencies"
-      pip:
-        name: MySQL-python
-        extra_args: --index=https://pypi.python.org/pypi/
-        version: 1.2.3
-
-    - name: Download and Install mysql
-      apt:
-        deb: http://repo.mysql.com/mysql-apt-config_0.8.13-1_all.deb
-
-    - name: Set MySQL root Password
+    - name: mysql_root_password
       mysql_user:
-        login_host: 'localhost'
-        login_user: 'ubuntu'
-        login_password: ''
-        name: 'ubuntu'
-        password: 'welcome1'
-        state: present
+        login_user: ubuntu
+        login_password: "{{ mysql_root_password }}"
+        user: ubuntu
+        check_implicit_admin: true
+        password: "{{ mysql_root_password }}"
+        host: localhost
 
-    - name: Remove the test database
-      mysql_db: name=test state=absent
-      notify:
-        - Restart MySQL
+
