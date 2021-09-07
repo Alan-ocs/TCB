@@ -4,9 +4,9 @@ import json
 import os
 from flask import escape
 from flask_cors import CORS, cross_origin
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail, Email
-# from python_http_client.exceptions import HTTPError
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, Email
+from python_http_client.exceptions import HTTPError
 
 @cross_origin()
 def recebe_requisicao(request):
@@ -60,22 +60,22 @@ def cria_usuario_moodle(email,nome,sobrenome):
 		return 'erro'
 
 
-# def SendEmail(emailadress):
-#     sg = SendGridAPIClient(os.environ['EMAIL_API_KEY'])
+def SendEmail(email):
+    sg = SendGridAPIClient(os.environ['EMAIL_API_KEY'])
 
-#     html_content = "<p>Olá, sua conta foi criada, sua senha é P@40ssword123</p>"
+    html_content = "<p>Olá, sua conta foi criada, sua senha é P@40ssword123</p>"
 
-#     message = Mail(
-#         to_emails = (emailadress),
-#         from_email='tcb.alansilva@gmail.com',
-#         subject="Sua conta foi criada!",
-#         html_content=html_content
-#         )
-#     message.add_bcc("tcb.alansilva@gmail.com")
+    message = Mail(
+        to_emails = (email),
+        from_email='tcb.alansilva@gmail.com',
+        subject="Sua conta foi criada!",
+        html_content=html_content
+        )
+    message.add_bcc("tcb.alansilva@gmail.com")
 
-#     try:
-#         response = sg.send(message)
-#         return f"email.status_code={response.status_code}"
+    try:
+        response = sg.send(message)
+        return f"email.status_code={response.status_code}"
 
-#     except HTTPError as e:
-#         return e.message
+    except HTTPError as e:
+        return e.message
