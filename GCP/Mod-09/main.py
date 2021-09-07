@@ -18,6 +18,7 @@ def recebe_requisicao(request):
         email = request_form['inputEmail']
 
         resultado = cria_usuario_moodle(email,nome,sobrenome)
+		
 
         if resultado == 'sucesso':
         	return 'Solicitação recebida com sucesso.'
@@ -55,6 +56,7 @@ def cria_usuario_moodle(email,nome,sobrenome):
 		else:
 			print('Result: ' + response.text)	
 			return 'sucesso'
+			SendEmail(email)
 	except Exception as e:
 		print(e)
 		return 'erro'
