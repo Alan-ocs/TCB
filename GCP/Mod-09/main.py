@@ -2,11 +2,21 @@ import requests
 import sendgrid
 import json
 import os
+import random
+import string
 from flask import escape
 from flask_cors import CORS, cross_origin
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email
 from python_http_client.exceptions import HTTPError
+
+
+# Generate Password
+length = 16
+chars = string.ascii_letters + string.digits + '!@#$%^&*()}{][~_-'
+rnd = random.SystemRandom()
+Password = ''.join(rnd.choice(chars) for i in range(length))
+
 
 @cross_origin()
 def recebe_requisicao(request):
@@ -18,8 +28,8 @@ def recebe_requisicao(request):
         email = request_form['inputEmail']
 
         resultado = cria_usuario_moodle(email,nome,sobrenome)
-		
 
+		
         if resultado == 'sucesso':
         	return 'Solicitação recebida com sucesso.'
         else:
@@ -28,7 +38,6 @@ def recebe_requisicao(request):
     else:
         print('RR:ERRO:PARAMETRO_NAO_ENCONTRADO')
         return 'Erro, entre em contato com o administrator do sistema.'
-
 
 
 def cria_usuario_moodle(email,nome,sobrenome):
@@ -46,7 +55,7 @@ def cria_usuario_moodle(email,nome,sobrenome):
 	        'users[0][email]': email,
 	        'users[0][lastname]': sobrenome,
 	        'users[0][firstname]': nome,
-	        'users[0][password]': 'P@40ssword123'}
+	        'users[0][password]': Password}
 
 	try:
 		response = requests.post(url,data=users)
@@ -55,8 +64,9 @@ def cria_usuario_moodle(email,nome,sobrenome):
 			return 'erro'
 		else:
 			print('Result: ' + response.text)	
-			return 'sucesso'
 			SendEmail(email)
+			return 'sucesso'
+
 	except Exception as e:
 		print(e)
 		return 'erro'
@@ -65,13 +75,11 @@ def cria_usuario_moodle(email,nome,sobrenome):
 def SendEmail(email):
     sg = SendGridAPIClient(os.environ['EMAIL_API_KEY'])
 
-    html_content = "<p>Olá, sua conta foi criada, sua senha é P@40ssword123</p>"
-
     message = Mail(
-        to_emails = (email),
+        to_emails = email,
         from_email='tcb.alansilva@gmail.com',
         subject="Sua conta foi criada!",
-        html_content=html_content
+        html_content="<p>Olá, sua conta foi criada, sua senha é {0}</p>".format(Password)
         )
     message.add_bcc("tcb.alansilva@gmail.com")
 
