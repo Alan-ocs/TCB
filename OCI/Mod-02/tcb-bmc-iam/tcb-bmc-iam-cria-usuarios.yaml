@@ -1,0 +1,35 @@
+---
+    
+- name: Cria usuário
+  oci_identity_user:
+    name: "{{ item }}"
+    description: "Membro do grupo {{ group_name }}"
+    compartment_id: "{{ parent_compartment_ocid }}"
+    email: "{{ item }}{{ dominio }}"
+  register: criacaousuario
+- set_fact:
+    user_ocid: "{{ criacaousuario.user['id'] }}"
+- debug:
+    msg: "Usuário {{ item }} criado"
+  when: criacaousuario.changed
+
+- name: Adiciona usuário ao grupo
+  oci_identity_user_group_membership:
+    user_id: "{{ user_ocid }}"
+    group_id: "{{ group_ocid }}"
+    compartment_id: "{{ parent_compartment_ocid }}"
+  register: result
+- set_fact:
+    user_group_membership_ocid: "{{ result.user_group_membership['id'] }}"
+ 
+- name: Cria senha do usuário
+  oci_identity_ui_password:
+    user_id: "{{ user_ocid }}"
+  register: result
+  when: criacaousuario.changed
+- set_fact:
+    user_password: "{{ result.ui_password['password'] }}"
+  when: criacaousuario.changed
+- debug:
+    msg: "Senha de {{ item }} é {{ user_password }}"
+  when: criacaousuario.changed

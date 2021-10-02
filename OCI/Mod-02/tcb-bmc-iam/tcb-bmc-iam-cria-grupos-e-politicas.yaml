@@ -1,0 +1,139 @@
+---
+
+- name: Criação de grupos e politicas na Oracle Cloud Infrastructure
+  hosts: localhost
+  collections:
+    - oracle.oci
+  vars:
+    parent_compartment_ocid: "{{ lookup('env', 'PARENT_COMPARTMENT_OCID') }}"
+    compute_compartment_ocid: "{{ lookup('env', 'COMPUTE_COMPARTMENT_OCID') }}"
+    redes_compartment_ocid: "{{ lookup('env', 'REDES_COMPARTMENT_OCID') }}"
+    dba_compartment_ocid: "{{ lookup('env', 'DB_COMPARTMENT_OCID') }}"
+
+    compute_group_name: "ComputeAdmin"
+    redes_group_name: "RedesAdmin"
+    dba_group_name: "DBAsAdmin"
+    cloudadm_group_name: "TCBCloudAdmin"
+    operadores_group_name: "Operadores"
+
+  tasks:
+    - block:
+      - name: Valida pre-requisitos
+        fail:
+          msg: "Variavel de ambiente {{item}} nao definida. Por favor corrigir."
+        when: item not in ansible_env
+        with_items:
+          - "PARENT_COMPARTMENT_OCID"
+          - "COMPUTE_COMPARTMENT_OCID"
+          - "REDES_COMPARTMENT_OCID"
+          - "DB_COMPARTMENT_OCID"
+
+      # Criação dos grupos
+
+      # Criação do grupo ComputeAdmin
+      - name: Criar um grupo para o gerenciamento dos recursos de Compute
+        oci_identity_group:
+          name: "{{ compute_group_name }}"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Grupo permitido realizar o gerenciamento de todos recursos de Compute que estão no compartimento RecursosCompute"
+        register: result
+      - set_fact:
+          compute_group_ocid: "{{ result.group.id }}"
+
+      # Criação do grupo RedesAdmin
+      - name: Criar um grupo para o gerenciamento dos recursos de Redes
+        oci_identity_group:
+          name: "{{ redes_group_name }}"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Grupo permitido realizar o gerenciamento de todos os recursos de rede no compartimento RecursosRedes"
+        register: result
+      - set_fact:
+          redes_group_ocid: "{{ result.group.id }}"
+
+      # Criação do grupo DBAsAdmin
+      - name: Criar um grupo para o gerenciamento dos recursos de Database
+        oci_identity_group:
+          name: "{{ dba_group_name }}"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Grupo permitido realizar o gerenciamento de todos os recursos de database que estão no compartimento RecursosDatabase"
+        register: result
+      - set_fact:
+          dba_group_ocid: "{{ result.group.id }}"
+
+      # Criação do grupo TCBCloudAdmin
+      - name: Criar um grupo que possui autorização em todos os recursos da Tenancy
+        oci_identity_group:
+          name: "{{ cloudadm_group_name }}"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Grupo de Especialistas Cloud e Arquitetos de Soluções"
+        register: result
+      - set_fact:
+          cloud_adm_group_ocid: "{{ result.group.id }}"
+
+      # Criação do grupo Operadores
+      - name: Criar um grupo designado para monitorar todos os recursos na tenancy
+        oci_identity_group:
+          name: "{{ operadores_group_name }}"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Grupo com responsabilidades de monitorar os recursos em execução na Tenancy"
+        register: result
+      - set_fact:
+          operadores_group_ocid: "{{ result.group.id }}"
+
+      # Criação das Políticas
+
+      # Criação da Política ComputeAdminPolicy
+      - name: Atribuição da policy para o grupo ComputeAdmin
+        oci_identity_policy:
+          name: "ComputeAdminPolicy"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Permissão para gerenciar os recursos de Compute"
+          statements: ["Allow group {{ compute_group_name }} to manage instance-family in compartment id {{ compute_compartment_ocid }}"]
+        register: result
+      - set_fact:
+          compute_policy_ocid: "{{ result.policy.id }}"
+
+      # Criação da Política RedesAdminPolicy
+      - name: Atribuição da policy para o grupo RedesAdmin
+        oci_identity_policy:
+          name: "RedesAdminPolicy"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Permissão para gerenciar os recursos de Redes"
+          statements: ["Allow group {{ redes_group_name }} to manage virtual-network-family in compartment id {{ redes_compartment_ocid }}",
+                       "Allow group {{ redes_group_name }} to manage load-balancers in compartment id {{ redes_compartment_ocid }}"]
+        register: result
+      - set_fact:
+          redes_policy_ocid: "{{ result.policy.id }}"
+
+      # Criação da Política DBAsAdminPolicy
+      - name: Atribuição da policy para o grupo DBAsAdmin
+        oci_identity_policy:
+          name: "DBAsAdminPolicy"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Permissão para gerenciar os recursos de Database"
+          statements: ["Allow group {{ dba_group_name }} to manage database-family in compartment id {{ dba_compartment_ocid }}"]
+        register: result
+      - set_fact:
+          dba_policy_ocid: "{{ result.policy.id }}"
+          
+      # Criação da Política TCBCloudAdminPolicy
+      - name: Atribuição da policy para o grupo TCBCloudAdmin
+        oci_identity_policy:
+          name: "TCBCloudAdminPolicy"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Permissão para gerenciar todos os recursos na tenancy"
+          statements: ["Allow group {{ cloudadm_group_name }} to manage all-resources in tenancy"]
+        register: result
+      - set_fact:
+          cloud_adm_policy_ocid: "{{ result.policy.id }}"
+
+      # Criação da Política OperadoresPolicy
+      - name: Atribuição da policy para o grupo Operadores
+        oci_identity_policy:
+          name: "OperadoresPolicy"
+          compartment_id: "{{ parent_compartment_ocid }}"
+          description: "Permissão para visualizar inspecionando todos os recursos da Tenancy"
+          statements: ["Allow group {{ operadores_group_name }} to inspect all-resources in tenancy"]
+        register: result
+      - set_fact:
+          operadores_policy_ocid: "{{ result.policy.id }}"
