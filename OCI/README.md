@@ -15,7 +15,7 @@ openssl rsa -pubout -in myPrivateKey.pem -out myPublicKey.pem
 
 #### 3. Install the OCI Cli:
 ```
-##  bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"
+bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"
 ```
 
 #### 4. Configure the OCI Cli:
