@@ -1,6 +1,3 @@
-# The Cloud Bootcamp OCI Module
-* ### Terraform
-
 #### 1. Create a terraform.tfvars file with your info:
 
 ```
@@ -14,7 +11,6 @@ private_key_path = "YOUR PRIVATE KEY PATH"
 
 region = "YOUR REGION"
 ```
-
 #### 2. Run the Terraform
 
 ```
@@ -23,5 +19,3 @@ terraform validate
 terraform plan
 terraform apply
 ```
-
-
