@@ -8,10 +8,9 @@
 openssl genrsa -out myPrivateKey.pem 2048
 openssl rsa -pubout -in myPrivateKey.pem -out myPublicKey.pem
 ```
+## DO NOT SHARE YOUR KEYS
 
 #### 2.  Import the Public Key on your OCI Identity Users tab
-
-## DO NOT SHARE YOUR KEYS
 
 #### 3. Install the OCI Cli:
 ```
