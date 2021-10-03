@@ -25,3 +25,6 @@ variable "recursosRedes" {
   
 }
 
+variable "DefaultRouteTable" {
+  
+}
