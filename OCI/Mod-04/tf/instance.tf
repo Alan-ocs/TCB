@@ -67,5 +67,4 @@ systemctl restart  firewalld
 touch ~opc/userdata.`date +%s`.finish
 echo '################### webserver userdata ends #######################'
 EOF
-
 }

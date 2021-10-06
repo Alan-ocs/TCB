@@ -1,8 +1,7 @@
 variable "tenancy_ocid" {
 }
 
-variable "compartment_ocid" {
-  
+variable "compartment_ocid" { 
 }
 
 variable "user_ocid" {
@@ -17,14 +16,10 @@ variable "private_key" {
 variable "region" {
 }
 
-
-
-variable "ssh_public_key_file" {
-  
+variable "ssh_public_key_file" { 
 }
 
 variable "availability_domain" {
-  
 }
 
 variable "instance_image_ocid" {

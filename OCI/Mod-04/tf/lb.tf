@@ -1,5 +1,5 @@
 resource "oci_load_balancer" "lb1" {
-  shape          = "100Mbps"
+  shape          = "10Mbps"
   compartment_id = var.compartment_ocid
 
   subnet_ids = [
@@ -14,7 +14,7 @@ resource "oci_load_balancer" "lb1" {
 }
 
 resource "oci_load_balancer" "lb2" {
-  shape          = "100Mbps"
+  shape          = "10Mbps"
   compartment_id = var.compartment_ocid
 
   subnet_ids = [
@@ -27,7 +27,7 @@ resource "oci_load_balancer" "lb2" {
 
 
 variable "load_balancer_shape_details_maximum_bandwidth_in_mbps" {
-  default = 100
+  default = 10
 }
 
 variable "load_balancer_shape_details_minimum_bandwidth_in_mbps" {
@@ -77,36 +77,8 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
     url_path            = "/"
   }
 
-  # ssl_configuration {
-  #   protocols         = ["TLSv1.1", "TLSv1.2"]
-  #   cipher_suite_name = oci_load_balancer_ssl_cipher_suite.test_ssl_cipher_suite2.name
-  #   certificate_name  = oci_load_balancer_certificate.lb-cert2.certificate_name
-  # }
 }
 
-# resource "oci_load_balancer_certificate" "lb-cert1" {
-#   load_balancer_id   = oci_load_balancer.lb1.id
-#   ca_certificate     = var.ca_certificate
-#   certificate_name   = "certificate1"
-#   private_key        = var.private_key
-#   public_certificate = var.public_certificate
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
-# resource "oci_load_balancer_certificate" "lb-cert2" {
-#   load_balancer_id   = oci_load_balancer.lb2.id
-#   ca_certificate     = var.ca_certificate
-#   certificate_name   = "certificate2"
-#   private_key        = var.private_key
-#   public_certificate = var.public_certificate
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
 
 resource "oci_load_balancer_path_route_set" "test_path_route_set" {
   #Required
@@ -129,14 +101,14 @@ resource "oci_load_balancer_hostname" "test_hostname1" {
   #Required
   hostname         = "app.example.com"
   load_balancer_id = oci_load_balancer.lb1.id
-  name             = "hostname1"
+  name             = "be-instance1"
 }
 
 resource "oci_load_balancer_hostname" "test_hostname2" {
   #Required
   hostname         = "app2.example.com"
   load_balancer_id = oci_load_balancer.lb1.id
-  name             = "hostname2"
+  name             = "be-instance2"
 }
 
 resource "oci_load_balancer_listener" "lb-listener1" {
@@ -160,13 +132,6 @@ resource "oci_load_balancer_listener" "lb-listener2" {
   port                     = 443
   protocol                 = "HTTP"
 
-  # ssl_configuration {
-  #   certificate_name        = oci_load_balancer_certificate.lb-cert1.certificate_name
-  #   verify_peer_certificate = false
-  #   protocols               = ["TLSv1.1", "TLSv1.2"]
-  #   server_order_preference = "ENABLED"
-  #   cipher_suite_name       = oci_load_balancer_ssl_cipher_suite.test_ssl_cipher_suite.name
-  # }
 }
 
 resource "oci_load_balancer_listener" "lb-listener3" {
