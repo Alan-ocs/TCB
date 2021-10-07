@@ -80,22 +80,22 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
 }
 
 
-resource "oci_load_balancer_path_route_set" "test_path_route_set" {
-  #Required
-  load_balancer_id = oci_load_balancer.lb1.id
-  name             = "pr-set1"
+# resource "oci_load_balancer_path_route_set" "test_path_route_set" {
+#   #Required
+#   load_balancer_id = oci_load_balancer.lb1.id
+#   name             = "pr-set1"
 
-  path_routes {
-    #Required
-    backend_set_name = oci_load_balancer_backend_set.lb-bes1.name
-    path             = "/example/video/123"
+#   path_routes {
+#     #Required
+#     backend_set_name = oci_load_balancer_backend_set.lb-bes1.name
+#     path             = "/example/video/123"
 
-    path_match_type {
-      #Required
-      match_type = "EXACT_MATCH"
-    }
-  }
-}
+#     path_match_type {
+#       #Required
+#       match_type = "EXACT_MATCH"
+#     }
+#   }
+# }
 
 resource "oci_load_balancer_hostname" "test_hostname1" {
   #Required
@@ -241,22 +241,22 @@ resource "oci_load_balancer_ssl_cipher_suite" "test_ssl_cipher_suite" {
   load_balancer_id = oci_load_balancer.lb1.id
 }
 
-resource "oci_load_balancer_ssl_cipher_suite" "test_ssl_cipher_suite2" {
-  #Required
-  name = "test_cipher_name"
+# resource "oci_load_balancer_ssl_cipher_suite" "test_ssl_cipher_suite2" {
+#   #Required
+#   name = "test_cipher_name"
 
-  ciphers = ["AES128-SHA", "AES256-SHA"]
+#   ciphers = ["AES128-SHA", "AES256-SHA"]
 
-  #Optional
-  load_balancer_id = oci_load_balancer.lb2.id
-}
+#   #Optional
+#   load_balancer_id = oci_load_balancer.lb2.id
+# }
 
-data "oci_load_balancer_ssl_cipher_suites" "test_ssl_cipher_suites" {
-  #Optional
-  load_balancer_id = oci_load_balancer.lb1.id
-}
+# data "oci_load_balancer_ssl_cipher_suites" "test_ssl_cipher_suites" {
+#   #Optional
+#   load_balancer_id = oci_load_balancer.lb1.id
+# }
 
-data "oci_load_balancer_ssl_cipher_suites" "test_ssl_cipher_suites2" {
-  #Optional
-  load_balancer_id = oci_load_balancer.lb2.id
-}
+# data "oci_load_balancer_ssl_cipher_suites" "test_ssl_cipher_suites2" {
+#   #Optional
+#   load_balancer_id = oci_load_balancer.lb2.id
+# }
