@@ -7,8 +7,8 @@ resource "oci_core_instance" "webserver" {
                         "aplicacao":"videobackup"}
 
   create_vnic_details {
-    subnet_id        = oci_core_subnet.subnet1.id
-    display_name     = "primaryvnic"
+    subnet_id        = oci_core_subnet.subnet2.id
+    display_name     = "subnet2"
     assign_public_ip = true
     hostname_label   = "webserver"
   }

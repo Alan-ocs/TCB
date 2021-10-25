@@ -1,0 +1,55 @@
+---
+- name: Create On-Premises LAB with DC and Users
+  hosts: win
+  tasks:
+    - name: Install AD Role
+      win_feature: 
+          name=AD-Domain-Services
+          include_management_tools=yes
+          include_sub_features=yes
+          state=present
+      register: result
+
+    - name: Create the Domain
+      win_domain: 
+        dns_domain_name=alansilva.local
+        safe_mode_password=$ucessO[2022!
+      register: ad
+
+    - name: Reboot Server
+      win_reboot:
+        msg: "Rebooting..."
+        pre_reboot_delay: 1
+      when: ad.changed
+
+    - name: Wait for the DC
+      pause:
+        minutes: 6
+        
+    # - name: Create Multiple AD Users
+    #   win_domain_user:
+    #     name: "{{ item }}"
+    #     password: v4m0spr4c1m4!
+    #     groups:
+    #       - Domain Users
+    #     state: present
+    #   loop: 
+    #     - John.Constantine
+    #     - Matthew.Murdock
+    #     - Light.Yagami
+    #     - Kiritsugu.Emiya
+
+    - name: Create Temp Folder
+      win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Download the Azure AD Connect
+      win_get_url:
+        url: https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi
+        dest: C:\Temp\AzureADConnect.msi
+
+    - name: Install AD Connect
+      win_package: 
+        path: C:\Temp\AzureADConnect.msi
+        state: present
