@@ -1,0 +1,8 @@
+[win]
+tbcalansilva-dc ansible_host=192.168.25.35
+
+[win:vars]
+ansible_user=administrator
+ansible_password=123qwe.
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
