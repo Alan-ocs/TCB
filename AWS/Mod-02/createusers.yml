@@ -1,0 +1,33 @@
+---
+- name: create users from csv file
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: reading the csv file
+      read_csv:
+        path: usuarios.csv
+        delimiter: ","
+      delegate_to: locahost
+      register: user_list
+
+    - name: display user_list data
+      debug:
+        msg: "{{ user_list.list }}"
+
+    - name: print dictionaries
+      debug:
+        msg: "{{ item.Username }}"
+      loop: "{{ user_list.list }}"
+
+    - name: create users
+      iam:
+        iam_type: user
+        name: "{{ item.Username }}"
+        password: "{{ item.password }}"
+        groups: "{{ item.group }}"
+        state: absent
+      loop: "{{ user_list.list }}"
+
+      
