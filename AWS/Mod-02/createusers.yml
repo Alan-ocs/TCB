@@ -28,6 +28,4 @@
         password: "{{ item.password }}"
         groups: "{{ item.group }}"
         state: absent
-      loop: "{{ user_list.list }}"
-
-      
+      loop: "{{ user_list.list }}"    
