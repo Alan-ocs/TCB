@@ -30,3 +30,7 @@ resource "aws_iam_group_policy_attachment" "Estagiarios-ReadOnly" {
     policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
     depends_on = [aws_iam_group.Estagiarios]
 }
+
+# Alan.Ocs@gmail.com
+#
+# Hands-On Project by @TheCloudBootcamp

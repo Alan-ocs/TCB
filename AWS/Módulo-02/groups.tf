@@ -22,3 +22,7 @@ resource "aws_iam_group" "Estagiarios" {
   name = "Estagiarios"
   path = "/"
 }
+
+# Alan.Ocs@gmail.com
+#
+# Hands-On Project by @TheCloudBootcamp

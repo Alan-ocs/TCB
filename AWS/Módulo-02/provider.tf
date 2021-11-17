@@ -4,3 +4,6 @@ provider "aws" {
     secret_key = var.secret_key
 }
 
+# Alan.Ocs@gmail.com
+#
+# Hands-On Project by @TheCloudBootcamp

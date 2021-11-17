@@ -28,4 +28,8 @@
  #      password: "{{ item.password }}" # "{{ lookup('password', 'credentials/pi length=12 chars=ascii_letters,digits') | password_hash('sha512') }}"
         groups: "{{ item.group }}"
         state: absent
-      loop: "{{ user_list.list }}"    
+      loop: "{{ user_list.list }}"  
+
+# Alan.Ocs@gmail.com
+#
+# Hands-On Project by @TheCloudBootcamp  
