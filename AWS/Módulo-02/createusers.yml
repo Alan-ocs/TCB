@@ -25,8 +25,9 @@
       iam:
         iam_type: user
         name: "{{ item.Username }}"
- #      password: "{{ item.password }}" # "{{ lookup('password', 'credentials/pi length=12 chars=ascii_letters,digits') | password_hash('sha512') }}"
+        password: "{{ lookup('password', 'credentials/password length=12 chars=ascii_letters,digits') | password_hash('sha512') }}"
         groups: "{{ item.group }}"
+        #state: present
         state: absent
       loop: "{{ user_list.list }}"  
 
