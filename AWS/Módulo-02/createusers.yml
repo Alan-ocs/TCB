@@ -27,8 +27,8 @@
         name: "{{ item.Username }}"
         password: "{{ lookup('password', 'credentials/password length=12 chars=ascii_letters,digits') | password_hash('sha512') }}"
         groups: "{{ item.group }}"
-        #state: present
-        state: absent
+        state: present
+        # state: absent
       loop: "{{ user_list.list }}"  
 
 # Alan.Ocs@gmail.com
